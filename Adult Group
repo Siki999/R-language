@@ -1,0 +1,42 @@
+View(Adult_RT_After)                ##Reaction time in the adult group
+my_data <- Adult_RT_After
+shapiro.test(my_data$RT)            ##Normality Test
+
+install.packages("car")
+library(car)
+leveneTest(RT~Group,data=Adult_RT_After,center=mean)        ##Homogeneity of variance test
+
+oneway.test(RT~Group,data=Adult_RT_After,var.equal = F)
+
+install.packages("onewaytests") 
+library(onewaytests)
+welch.test(Group~RT,data=Adult_RT_After)                    ##Welch's ANOVA
+
+install.packages("userfriendlyscience ")              
+library(userfriendlyscience )
+one.way <- oneway(y=Adult_RT_After$RT,x=Adult_RT_After$Group,means= T,plot=T,levene=T,posthoc='games-howell')     ##Post hoc test: Games-howell
+
+install.packages("jmv")
+library(jmv)
+anovaOneW(deps=RT,group=Group,data=Adult_RT_After,desc=T,descPlot = T,norm=T,qq=T,eqv=T,phMeanDif = T,phMethod= "gamesHowell",phTest = T,phFlag=T)
+##Tables of all results
+
+View(Adult_ACC_After)                     ##Accuracy in the adult group
+my_data <- Adult_ACC_After
+shapiro.test(my_data$ACC)                 ##Normality Test
+
+bartlett.test(ACC~Group,data=my_data)              ##Homogeneity of variance test
+
+fit<-aov(ACC~Group,data=my_data)                   ##ANOVA
+summary(fit)
+
+TukeyHSD(fit)                                      ##Post hoc test: TukeyHSD
+
+library("ggpubr")                                  
+compare_means(ACC~Group, data = Adult_ACC_After,method="anova")
+
+my_comparisons <- list(c("Metaphor-congruent action group","Control group"), c("Metaphor-congruent action group", "Metaphor-incongruent action group"),
+                       c("Control group", "Metaphor-incongruent action group"))
+
+ggboxplot(my_data, x = "Group", y = "RT", color = "Group", palette = "jco", order = c("Metaphor-congruent action group","Control group", "Metaphor-incongruent action group"),
+          ylab = "RT", xlab = "Group")+ stat_compare_means(label.y = 12000,method = "anova")+ stat_compare_means(comparisons = my_comparisons,label.y = c(10500,11000,11500))
