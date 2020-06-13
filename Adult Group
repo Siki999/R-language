@@ -14,7 +14,8 @@ welch.test(Group~RT,data=Adult_RT_After)                    ##Welch's ANOVA
 
 install.packages("userfriendlyscience ")              
 library(userfriendlyscience )
-one.way <- oneway(y=Adult_RT_After$RT,x=Adult_RT_After$Group,means= T,plot=T,levene=T,posthoc='games-howell')     ##Post hoc test: Games-howell
+one.way <- oneway(y=Adult_RT_After$RT,x=Adult_RT_After$Group,means= T,plot=T,levene=T,posthoc='games-howell')               
+       ##Post hoc test: Games-howell
 
 install.packages("jmv")
 library(jmv)
@@ -40,3 +41,5 @@ my_comparisons <- list(c("Metaphor-congruent action group","Control group"), c("
 
 ggboxplot(my_data, x = "Group", y = "RT", color = "Group", palette = "jco", order = c("Metaphor-congruent action group","Control group", "Metaphor-incongruent action group"),
           ylab = "RT", xlab = "Group")+ stat_compare_means(label.y = 12000,method = "anova")+ stat_compare_means(comparisons = my_comparisons,label.y = c(10500,11000,11500))
+
+
